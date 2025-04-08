@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 interface CryptoAsset {
   id: string;
@@ -11,40 +11,40 @@ interface CryptoAsset {
   purchasePrice: number;
 }
 
-export default function Portfolio() {
-  const [portfolio, setPortfolio] = useState<CryptoAsset[]>([
-    {
-      id: "bitcoin",
-      name: "Bitcoin",
-      symbol: "BTC",
-      quantity: 0.5,
-      currentPrice: 45000,
-      purchasePrice: 42000,
-    },
-    {
-      id: "ethereum",
-      name: "Ethereum",
-      symbol: "ETH",
-      quantity: 2,
-      currentPrice: 3000,
-      purchasePrice: 2800,
-    },
-    {
-      id: "solana",
-      name: "Solana",
-      symbol: "SOL",
-      quantity: 10,
-      currentPrice: 150,
-      purchasePrice: 120,
-    },
-  ]);
+const portfolio = [
+  {
+    id: "bitcoin",
+    name: "Bitcoin",
+    symbol: "BTC",
+    quantity: 0.5,
+    currentPrice: 45000,
+    purchasePrice: 42000,
+  },
+  {
+    id: "ethereum",
+    name: "Ethereum",
+    symbol: "ETH",
+    quantity: 2,
+    currentPrice: 3000,
+    purchasePrice: 2800,
+  },
+  {
+    id: "solana",
+    name: "Solana",
+    symbol: "SOL",
+    quantity: 10,
+    currentPrice: 150,
+    purchasePrice: 120,
+  },
+];
 
+export default function Portfolio() {
   const totalValue = useMemo(() => {
     return portfolio.reduce(
       (acc, coin) => acc + coin.quantity * coin.currentPrice,
       0
     );
-  }, [portfolio]);
+  }, []);
 
   const calculateProfitLoss = (coin: CryptoAsset) => {
     return (coin.currentPrice - coin.purchasePrice) * coin.quantity;
