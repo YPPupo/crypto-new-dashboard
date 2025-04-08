@@ -1,0 +1,31 @@
+import { CoinGeckoService } from "@/services/coingecko.service";
+import { useQuery } from "@tanstack/react-query";
+
+const coinGeckoService = new CoinGeckoService();
+
+export function useGlobalData() {
+  return useQuery<GlobalData>({
+    queryKey: ["globalData"],
+    queryFn: () => coinGeckoService.getGlobalData(),
+    staleTime: 60_000,
+  });
+}
+
+export function useMarketData(
+  itemsPerPage: number = 10,
+  pageNumber: number = 1
+) {
+  return useQuery<MarketData[]>({
+    queryKey: ["marketData", itemsPerPage, pageNumber],
+    queryFn: () => coinGeckoService.getMarketData({ itemsPerPage, pageNumber }),
+    staleTime: 60_000, // Los datos se consideran frescos por 1 minuto
+  });
+}
+
+export function useRelativePerformance(coins: string[], days: number) {
+  return useQuery<HistoricalData[]>({
+    queryKey: ["relativePerformance", coins, days],
+    queryFn: () => coinGeckoService.getRelativePerformance(coins, days),
+    staleTime: 60_000,
+  });
+}
