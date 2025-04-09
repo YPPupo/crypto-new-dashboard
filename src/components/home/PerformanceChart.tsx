@@ -1,10 +1,13 @@
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { useRelativePerformance } from "@/lib/hooks/useCoinGecko";
 
 Chart.register(...registerables);
 
-const coins: (keyof typeof coinColors)[] = ["bitcoin", "ethereum", "binancecoin"];
+const coins: (keyof typeof coinColors)[] = [
+  "bitcoin",
+  "ethereum",
+  "binancecoin",
+];
 
 const coinColors = {
   bitcoin: "rgb(99, 102, 241)",
@@ -12,8 +15,11 @@ const coinColors = {
   binancecoin: "rgb(16, 185, 129)",
 };
 
-export const MarketPerformanceChart = () => {
-  const { data, isLoading, isError } = useRelativePerformance(coins, 180);
+export const MarketPerformanceChart = ({
+  performanceData,
+}: {
+  performanceData: HistoricalData[];
+}) => {
 
   const processData = (data: HistoricalData[]) => {
     const labels = data[0].prices.map(([timestamp]) => {
@@ -40,10 +46,7 @@ export const MarketPerformanceChart = () => {
     return { labels, datasets };
   };
 
-  if (isLoading) return <p>Cargando datos...</p>;
-  if (isError || !data) return <p>Error al obtener datos</p>;
-
-  const chartData = processData(data);
+  const chartData = processData(performanceData);
 
   return (
     <div className="bg-gray-800 p-6 rounded-xl mb-8">

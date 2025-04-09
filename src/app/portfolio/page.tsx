@@ -73,7 +73,7 @@ export default function Portfolio() {
               return (
                 <tr
                   key={coin.id}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-500 transition-colors"
                 >
                   <td className="p-4 font-medium">
                     {coin.name} ({coin.symbol})

@@ -5,8 +5,8 @@ const alternativeService = new AlternativeService();
 
 export function useFearGreed() {
   return useQuery({
-    queryKey: ["fearGreed"],
+    queryKey: ["fearGreedData"],
     queryFn: () => alternativeService.getFearGreed(),
-    staleTime: 60_000,
+    staleTime: 60 * 1000,
   });
 }

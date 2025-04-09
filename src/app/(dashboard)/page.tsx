@@ -1,11 +1,16 @@
 "use client";
 
-import { useGlobalData, useMarketData } from "@/lib/hooks/useCoinGecko";
-import { useFearGreed } from "@/lib/hooks/useAlternative";
 import Skeleton from "react-loading-skeleton";
+
+import { useGlobalData, useMarketData, useRelativePerformance } from "@/lib/hooks/useCoinGecko";
+import { useFearGreed } from "@/lib/hooks/useAlternative";
+
 import { CryptoTable } from "@/components/home/CryptoTable";
 import { StatsGrid } from "@/components/home/StatsGrid";
 import { MarketPerformanceChart } from "@/components/home/PerformanceChart";
+
+const performanceCoins = ["bitcoin", "ethereum", "binancecoin"];
+const performanceDays = 180;
 
 export default function Home() {
   const {
@@ -26,17 +31,39 @@ export default function Home() {
     isError: isFearGreedError,
   } = useFearGreed();
 
-  const isLoading = [isGlobalLoading, isMarketLoading, isFearGreedLoading].some(
-    Boolean
-  );
-  const isError = [isGlobalError, isMarketError, isFearGreedError].some(
-    Boolean
-  );
-  const isDataMissing = !globalData || !marketData || !fearGreedData;
+  const {
+    data: relativePerformanceData,
+    isLoading: isRelativePerformanceLoading,
+    isError: isRelativePerformanceError,
+  } = useRelativePerformance(performanceCoins, performanceDays);
 
-  if (isLoading) return <LoadingScreen />;
+  const isInitiallyLoading =
+    (isGlobalLoading && !globalData) ||
+    (isMarketLoading && !marketData) ||
+    (isFearGreedLoading && !fearGreedData)||
+    (isRelativePerformanceLoading && !relativePerformanceData);
 
-  if (isError || isDataMissing) return <ErrorScreen />;
+  const shouldShowErrorScreen =
+    (isGlobalError && !globalData) ||
+    (isMarketError && !marketData) ||
+    (isFearGreedError && !fearGreedData)||
+    (isRelativePerformanceError && !relativePerformanceData);
+
+  if (isInitiallyLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (shouldShowErrorScreen) {
+    console.error(
+      "Error fetching data and no cache available for at least one query."
+    );
+    return <ErrorScreen />;
+  }
+
+  if (!globalData || !marketData || !fearGreedData || !relativePerformanceData) {
+    console.warn("Data points missing after initial checks, rendering fallback.");
+    return null; // O un estado de error/carga más específico si prefieres
+ }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-5">
@@ -44,7 +71,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-8">📊 Crypto Dashboard</h1>
 
         <StatsGrid global={globalData} fearGreed={fearGreedData} />
-        <MarketPerformanceChart />
+        <MarketPerformanceChart performanceData={relativePerformanceData} />
         <CryptoTable coins={marketData} />
       </div>
     </div>
