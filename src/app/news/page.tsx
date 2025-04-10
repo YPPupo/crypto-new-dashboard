@@ -90,7 +90,7 @@ export default function News() {
 
       {/* Error handling */}
       {isError && error && (
-        <div className="p-4 mb-4 bg-red-100 text-red-700 rounded-lg">
+        <div className="p-4 my-4 bg-red-100 text-red-700 rounded-lg">
           Error: {(error as Error).message}
         </div>
       )}
