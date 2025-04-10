@@ -51,3 +51,28 @@ interface HistoricalData {
   market_caps: [number, number][];
   total_volumes: [number, number][];
 }
+
+interface NewsArticle {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+  thumb_2x: string;
+  created_at: string;
+  author: string;
+  tags: string[];
+  news_site: string;
+  updated_at: string;
+}
+
+interface NewsApiResponse {
+  count: number;
+  data: NewsArticle[];
+  page: number;
+}
+
+interface RawNewsApiResponse {
+  count: number;
+  data: any[]; // Ajusta el tipo según la respuesta real de la API
+  page: number;
+}

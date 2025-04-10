@@ -1,7 +1,8 @@
 import { CoinGeckoService } from "@/services/coingecko.service";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 const coinGeckoService = new CoinGeckoService();
+const PER_PAGE = 20;
 
 export function useGlobalData() {
   return useQuery<GlobalData>({
@@ -26,6 +27,26 @@ export function useRelativePerformance(coins: string[], days: number) {
   return useQuery<HistoricalData[]>({
     queryKey: ["relativePerformance", coins, days],
     queryFn: () => coinGeckoService.getRelativePerformance(coins, days),
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useCoinGeckoNews() {
+  return useInfiniteQuery<NewsApiResponse>({
+    queryKey: ["news"],
+    queryFn: ({ pageParam = 1 }) =>
+      coinGeckoService.getCoinGeckoNews(pageParam as number),
+    getNextPageParam: (lastPage, allPages) => {
+      const itemsPerPage = PER_PAGE;
+      const currentPage = allPages.length;
+      const itemsInCurrentPage = lastPage.data.length;
+
+      if (itemsInCurrentPage < itemsPerPage) {
+        return undefined; // No more pages to fetch
+      }
+      return currentPage + 1;
+    },
+    initialPageParam: 1,
     staleTime: 60 * 1000,
   });
 }
