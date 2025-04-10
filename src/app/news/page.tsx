@@ -18,7 +18,6 @@ interface NewsArticle {
 }
 
 export default function News() {
-
   const {
     data,
     fetchNextPage,
@@ -30,8 +29,6 @@ export default function News() {
   } = useCoinGeckoNews();
 
   const articles = data?.pages?.flatMap((page) => page.data) ?? [];
-
-  console.log("Has Next Page:", hasNextPage);
 
   const loadMoreNews = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -48,12 +45,6 @@ export default function News() {
           Actualizaciones en tiempo real del mercado
         </p>
       </div>
-
-      {isError && error && (
-        <div className="p-4 mb-4 bg-red-100 text-red-700 rounded-lg">
-          Error: {(error as Error).message}
-        </div>
-      )}
 
       {/* News Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -95,6 +86,13 @@ export default function News() {
         <p className="text-center text-gray-500 mt-6">
           No se encontraron noticias.
         </p>
+      )}
+
+      {/* Error handling */}
+      {isError && error && (
+        <div className="p-4 mb-4 bg-red-100 text-red-700 rounded-lg">
+          Error: {(error as Error).message}
+        </div>
       )}
     </div>
   );

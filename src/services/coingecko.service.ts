@@ -44,7 +44,6 @@ export class CoinGeckoService {
   }
 
   async getCoinGeckoNews(pageParam: number): Promise<NewsApiResponse> {
-    console.log("Fetching news for page:", pageParam);
     const response = await axiosCoingecko.get<RawNewsApiResponse>(
       NEWS_API_URL,
       {
@@ -69,7 +68,6 @@ export class CoinGeckoService {
       updated_at: item.updated_at,
     }));
 
-    console.log(`Fetched ${articles.length} articles for page ${pageParam}`);
 
     return {
       data: articles,

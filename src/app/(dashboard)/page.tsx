@@ -62,7 +62,7 @@ export default function Home() {
 
   if (!globalData || !marketData || !fearGreedData || !relativePerformanceData) {
     console.warn("Data points missing after initial checks, rendering fallback.");
-    return null; // O un estado de error/carga más específico si prefieres
+    return null;
  }
 
   return (
